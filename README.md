@@ -1,57 +1,43 @@
-# font13
+# bogofont
 
-A [ROT13](https://en.wikipedia.org/wiki/ROT13) converter script for fonts.
+A fontforge script for creating a font with letters and numbers randomly remapped, [based on this ROT13 script](https://github.com/vakuum/font13).
+
+## Why?
+
+The use case for this font is obfuscating ASCII text and decimal digits in public screenshots, when you want to show what a user interface looks like without having strangers get all up in your business.
+
+To make it harder to decipher the text, `bogofont` by default only uses half of the available letters (with lowercase and uppercase mapped differently) and half of the available decimal digits every time it runs.
+
+You can specify a different number of letters and/or digits to use with optional parameters. The minimum is one letter and one digit; the maximum is 26 letters and 10 digits. Because the underlying text is not modified, it's impossible to map the same character to multiple display characters; only the other way around. You may see some ligature weirdness as the poor font tries to do what a font is supposed to do.
+
+I'm not going to extend this beyond ASCII, but you're welcome to try!
+
+## Dependencies
+
+You will need to install [fontforge](https://fontforge.org/) and the Python 3 bindings.
+
+```shell
+sudo apt-get install fontforge python3-fontforge
+```
 
 ## Usage
 
-You will need [fontforge](https://fontforge.org/) to run [font13.py](font13.py):
-
 ```
-$ fontforge -script font13.py font.ttf
+$ fontforge -script bogofont.py font.ttf bogofont.ttf
 ```
 
-Example:
+![Default settings](screenshot-default.png)
+
 
 ```
-$ sudo apt install fontforge
-
-$ fontforge --version
-...
-Version: 20190801
-...
-
-$ wget --content-disposition https://fonts.google.com/download?family=Roboto
-
-$ unzip Roboto.zip Roboto-Regular.ttf
-
-$ ls -1 Roboto-Regular.ttf
-Roboto-Regular.ttf
-
-$ fontforge -script font13.py Roboto-Regular.ttf
-
-$ ls -1 Roboto-Regular.ttf Ebobgb-Erthyne.ttf
-Roboto-Regular.ttf
-Ebobgb-Erthyne.ttf
-
-$ cp Roboto-Regular.ttf Ebobgb-Erthyne.ttf ~/.fonts
+$ fontforge -script bogofont.py -d 1 -l 1 font.ttf bogofont.ttf
 ```
 
-## Screenshots
+![EeeeEEEeeeEEEEEe](screenshot-eeEEEee.png)
 
-```
-$ pango-view --font Roboto --text 'The quick brown fox jumps over the lazy dog' --waterfall
 
-$ pango-view --font Ebobgb --text 'The quick brown fox jumps over the lazy dog' --waterfall
-```
+You can set up a cron job to re-run `bogofont` every day on the same input and output font so that the mapping keeps changing.
 
-![The quick brown fox jumps over the lazy dog](assets/1.png)
-![Gur dhvpx oebja sbk whzcf bire gur ynml qbt](assets/2.png)
+You shouldn't obfuscate UI elements that contain known or easily guessable text alongside your unknown text, or you will be providing a key.
 
-```
-$ pango-view --font Roboto --text 'abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ' --waterfall
-
-$ pango-view --font Ebobgb --text 'abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ' --waterfall
-```
-
-![abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ](assets/3.png)
-![nopqrstuvwxyzabcdefghijklm NOPQRSTUVWXYZABCDEFGHIJKLM](assets/4.png)
+Don't use this for anything important!
